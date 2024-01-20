@@ -1,5 +1,4 @@
 using GameRandomizer.Interfaces;
-using GiantBomb.Api.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameRandomizer.Controllers;
@@ -9,18 +8,41 @@ namespace GameRandomizer.Controllers;
 public class PlatformController(IGiantBombService giantBombService) : ControllerBase
 {
     [HttpGet]
-    public async Task<List<Platform>> GetPlatforms(int page = 1, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPlatforms(int page = 1, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
-        return await giantBombService.GetPlatforms(page, cancellationToken);
+
+        try
+        {
+            return Ok(await giantBombService.GetPlatforms(page, cancellationToken));
+        }
+        catch (OperationCanceledException e)
+        {
+            return StatusCode(499, e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
     }
     
     [HttpGet("{id:int}")]
-    public async Task<Platform> GetPlatform(int id, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetPlatform(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        try
+        {
+            return Ok(await giantBombService.GetPlatform(id, cancellationToken));
+        }
+        catch (OperationCanceledException e)
+        {
+            return StatusCode(499, e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
         
-        return await giantBombService.GetPlatform(id, cancellationToken);
     }
 }
