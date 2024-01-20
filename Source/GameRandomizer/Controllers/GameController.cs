@@ -24,4 +24,12 @@ public class GameController(IGiantBombService giantBombService) : ControllerBase
         
         return await giantBombService.GetGame(id, cancellationToken);
     }
+    
+    [HttpGet("platform")]
+    public async Task<List<Game>> GetGamesByPlatform(int platformId, int page = 1, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return await giantBombService.GetGamesByPlatform(platformId, page, cancellationToken);
+    }
 }
