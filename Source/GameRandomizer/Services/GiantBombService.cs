@@ -28,7 +28,7 @@ public class GiantBombService(IConfiguration configuration) : IGiantBombService
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        var filters = new Dictionary<string, object>() {
+        var filters = new Dictionary<string, object> {
             {"platforms", platformId}
         };
         
