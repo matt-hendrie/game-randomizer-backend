@@ -32,7 +32,7 @@ public class GiantBombService(IConfiguration configuration) : IGiantBombService
             {"platforms", platformId}
         };
         
-        var games = await _client.GetListResourceAsync<Game>("games", filterOptions: filters);
+        var games = await _client.GetListResourceAsync<Game>("games", page: page, filterOptions: filters);
         
         return games.ToList();
     }
