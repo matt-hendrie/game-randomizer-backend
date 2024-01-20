@@ -6,7 +6,7 @@ namespace GameRandomizer.Services;
 
 public class GiantBombService(IConfiguration configuration) : IGiantBombService
 {
-    private readonly GiantBombRestClient _client = new GiantBombRestClient(configuration["GiantBombKey"]);
+    private readonly GiantBombRestClient _client = new(configuration["GiantBombKey"]);
     
     public async Task<List<Game>> GetGames(int page = 1, CancellationToken cancellationToken = default)
     {
@@ -23,7 +23,20 @@ public class GiantBombService(IConfiguration configuration) : IGiantBombService
         var game = await _client.GetGameAsync(id);
         return game;
     }
-    
+
+    public async Task<List<Game>> GetGamesByPlatform(int platformId, int page, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        var filters = new Dictionary<string, object>() {
+            {"platforms", platformId}
+        };
+        
+        var games = await _client.GetListResourceAsync<Game>("games", filterOptions: filters);
+        
+        return games.ToList();
+    }
+
     public async Task<List<Platform>> GetPlatforms(int page = 1, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
